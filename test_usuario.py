@@ -1,18 +1,19 @@
 import unittest
 from datetime import date
 from usuario import UsuarioCliente, UsuarioAdministrador
+from pedido import Pedido
 
 class TestUsuarioCliente(unittest.TestCase):
-    def test_registro_cliente(self):
+    def test_registro_y_pedido_cliente(self):
         cliente = UsuarioCliente(
-            id_usuario=1,
-            nombre="Lucía",
-            apellido="Ramírez",
-            email="lucia@mail.com",
-            contrasena="abc123",
-            fecha_registro=date.today(),
-            direccion="Calle 123",
-            telefono="1234567890"
+            1,
+            "Lucía",
+            "Ramírez",
+            "lucia@mail.com",
+            "abc123",
+            "Calle 123",
+            "1234567890",
+            date.today()
         )
 
         print("\n--- REGISTRO CLIENTE ---")
@@ -25,60 +26,60 @@ class TestUsuarioCliente(unittest.TestCase):
         cliente.registrar()
         self.assertTrue(cliente.iniciar_sesion("lucia@mail.com", "abc123"))
 
-        # Métodos específicos del cliente
-        cliente.realizar_pedido()
+        # Crea y registra pedido
+        cliente.realizar_pedido(101, 3000, 1, 1,["imagen1.png", "imagen2.png"])
+        cliente.realizar_pedido(102, 5000, 2, 2, ["imagen3.png", "imagen4.png"])
+
+        self.assertEqual(len(cliente.get_pedidos_realizados()), 2)
+
+        print("\n--- HISTORIAL DE PEDIDOS ---")
         cliente.ver_historial_pedidos()
-        cliente.seleccionar_etiqueta()
-
-        # Test para editar datos
-        cliente.editar_datos(
-            nuevo_nombre="Lu",
-            nuevo_apellido="Fernández",
-            nuevo_email="lufernandez@mail.com",
-            nueva_direccion="Avenida 456",
-            nuevo_telefono="987654321"
-        )
-
-        print("\n--- DATOS ACTUALIZADOS ---")
-        print("Nuevo nombre:", cliente.get_nombre())
-        print("Nuevo apellido:", cliente.get_apellido())
-        print("Nuevo email:", cliente.get_email())
-        print("Nueva dirección:", cliente.get_direccion())
-        print("Nuevo teléfono:", cliente.get_telefono())
-
-        self.assertEqual(cliente.get_nombre(), "Lu")
-        self.assertEqual(cliente.get_apellido(), "Fernández")
-        self.assertEqual(cliente.get_email(), "lufernandez@mail.com")
-        self.assertEqual(cliente.get_direccion(), "Avenida 456")
-        self.assertEqual(cliente.get_telefono(), "987654321")
 
 
 class TestUsuarioAdministrador(unittest.TestCase):
-    def test_login_admin(self):
+    def test_login_y_acciones_admin(self):
         admin = UsuarioAdministrador(
-            id_usuario=99,
-            nombre="Carlos",
-            apellido="Pérez",
-            email="admin@empresa.com",
-            contrasena="admin123",
-            fecha_registro=date.today(),
-            cargo="Supervisor",
-            turno="Mañana"
+            99,
+            "Carlos",
+            "Pérez",
+            "admin@empresa.com",
+            "admin123",
+            date.today(),
+            "Supervisor",
+            "Mañana"
         )
 
         print("\n--- LOGIN ADMINISTRADOR ---")
+        self.assertTrue(admin.iniciar_sesion("admin@empresa.com", "admin123"))
+        self.assertFalse(admin.iniciar_sesion("admin@empresa.com", "claveIncorrecta"))
+
         print("Nombre:", admin.get_nombre())
         print("Apellido:", admin.get_apellido())
         print("Email:", admin.get_email())
         print("Cargo:", admin.get_cargo())
         print("Turno:", admin.get_turno())
 
-        self.assertTrue(admin.iniciar_sesion("admin@empresa.com", "admin123"))
-        self.assertFalse(admin.iniciar_sesion("admin@empresa.com", "claveErrada"))
+        #Se crea el cliente_test para el historial de pedidos por parte del admin
+        cliente_test = UsuarioCliente(
+            1,
+            "Lucía",
+            "Ramírez",
+            "lucia@mail.com",
+            "abc123",
+            "Calle 123",
+            "123456789"
+        )
 
-        # Métodos del administrador
-        admin.gestionar_usuarios()
-        admin.ver_pedidos_de_cliente()
+        #Luego creamos los pedidos
+        cliente_test.realizar_pedido(101, 3000, 1, 1, ["imagen1.png", "imagen2.png"])
+        cliente_test.realizar_pedido(102, 5000, 2, 2, ["imagen3.png", "imagen4.png"])
+
+        # Se muestra los pedidos desde el admin
+        print("\n--- HISTORIAL DE PEDIDOS DEL CLIENTE DESDE ADMIN ---")
+        admin.ver_pedidos_de_cliente(cliente_test)
+
+        print("\n--- ELIMINAR CUENTA DE CLIENTE ---")
+        admin.eliminar_cuenta_usuario(cliente_test)
 
 if __name__ == "__main__":
     unittest.main()
