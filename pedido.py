@@ -4,7 +4,6 @@ class Pedido:
     def __init__(self, id_pedido, fecha_pedido, estado, total, id_usuario, id_imagen):
         self._id_pedido = id_pedido
         self._fecha_pedido = fecha_pedido or date.today()
-        self._estado = estado
         self._total = total
         self._id_usuario = id_usuario
         self._id_imagen = id_imagen
