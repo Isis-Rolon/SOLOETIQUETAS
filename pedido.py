@@ -1,15 +1,16 @@
 from datetime import date
+from imagen import Imagen
 
 class Pedido:
-    def __init__(self, id_pedido, fecha_pedido, total, id_usuario, id_envio, id_pago, lista_de_imagenes):
+    def __init__(self, id_pedido, fecha_pedido, id_usuario, id_envio, id_pago, lista_de_imagenes):
         self._id_pedido = id_pedido
         self._fecha_pedido = fecha_pedido or date.today()
-        self._total = total
         self._id_usuario = id_usuario
         self._id_envio = id_envio
         self._id_pago = id_pago
-        self._lista_de_imagenes = lista_de_imagenes
-        self._estado = "pendiente"  # valor por defecto
+        self._lista_de_imagenes = lista_de_imagenes  # lista de objetos Imagen
+        self._estado = "pendiente"
+        self._total = 0  # se calcula con lógica
 
     # Getters
     def get_id_pedido(self): return self._id_pedido
@@ -30,7 +31,14 @@ class Pedido:
     def set_estado(self, nuevo_estado): self._estado = nuevo_estado
     def set_lista_imagenes(self, nueva_lista): self._lista_de_imagenes = nueva_lista
 
-    # Métodos adicionales
+    # Metodos adicionales
+    def calcular_total(self, precio_unitario):
+        total = 0
+        for imagen in self._lista_de_imagenes:
+            total += imagen.get_cantidad_etiquetas() * precio_unitario
+        self._total = total
+        print(f"Total calculado para el pedido {self._id_pedido}: ${self._total}")
+
     def generar_pedido(self):
         print(f"Pedido {self._id_pedido} generado para el usuario {self._id_usuario}.")
 
@@ -41,14 +49,3 @@ class Pedido:
     def cancelar_pedido(self):
         self._estado = "cancelado"
         print(f"Pedido {self._id_pedido} ha sido cancelado.")
-
-    def get_resumen(self):
-        return {
-            "ID Pedido": self._id_pedido,
-            "Total": self._total,
-            "Imágenes": self._lista_de_imagenes
-        }
-
-    def calcular_total(self, precio_unitario):
-        self._total = len(self._lista_de_imagenes) * precio_unitario
-        print(f"Total calculado para el pedido {self._id_pedido}: ${self._total}")

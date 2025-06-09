@@ -37,15 +37,21 @@ class Imagen:
     def set_id_usuario(self, nuevo_id_usuario):
         self._id_usuario = nuevo_id_usuario
 
-    # Métodos principales
-    def cargar_imagen(self):
-        print(f"Imagen {self._id_imagen} cargada correctamente.")
+    # Métodos principales con logica
+    # simula agregar la imagen a una lista externa 
+    def cargar_imagen(self, lista_imagenes):
+        lista_imagenes.append(self)
+        print(f"Imagen {self._id_imagen} cargada correctamente y añadida a la lista.")
 
     def modificar_imagen(self, nueva_ruta, nueva_descripcion, nueva_cantidad):
         self.set_ruta_imagen(nueva_ruta)
         self.set_descripcion(nueva_descripcion)
         self.set_cantidad_etiquetas(nueva_cantidad)
         print("Imagen modificada con éxito.")
-
-    def eliminar_imagen(self):
-        print(f"Imagen {self._id_imagen} eliminada del sistema.")
+    
+    def eliminar_imagen(self, lista_imagenes):
+        if self in lista_imagenes:
+            lista_imagenes.remove(self)
+            print(f"Imagen {self._id_imagen} eliminada de la lista.")
+        else:
+            print("La imagen no se encontró en la lista.")
