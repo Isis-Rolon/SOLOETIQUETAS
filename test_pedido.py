@@ -19,7 +19,7 @@ class TestPedido(unittest.TestCase):
             lista_de_imagenes=[imagen1, imagen2]
         )
 
-        # Calculal total según cantidad de etiquetas
+        # Calculamos el total según cantidad de etiquetas
         pedido.calcular_total(precio_unitario=1500)
         self.assertEqual(pedido.get_total(), 120000)
 

@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 from usuario import UsuarioCliente, UsuarioAdministrador
-from pedido import Pedido
+from imagen import Imagen
 
 class TestUsuarioCliente(unittest.TestCase):
     def test_registro_y_pedido_cliente(self):
@@ -26,9 +26,19 @@ class TestUsuarioCliente(unittest.TestCase):
         cliente.registrar()
         self.assertTrue(cliente.iniciar_sesion("lucia@mail.com", "abc123"))
 
-        # Crea y registra pedido
-        cliente.realizar_pedido(101, 3000, 1, 1,["imagen1.png", "imagen2.png"])
-        cliente.realizar_pedido(102, 5000, 2, 2, ["imagen3.png", "imagen4.png"])
+        # Crear imágenes correctamente
+        imagenes1 = [
+            Imagen(1, "imagen1.png", "Promocional", 2, 1),
+            Imagen(2, "imagen2.png", "Institucional", 3, 1)
+        ]
+        imagenes2 = [
+            Imagen(3, "imagen3.png", "Navideña", 4, 1),
+            Imagen(4, "imagen4.png", "Oferta", 5, 1)
+        ]
+
+        # Crea y registra pedidos
+        cliente.realizar_pedido(101, 3000, 1, 1, imagenes1)
+        cliente.realizar_pedido(102, 5000, 2, 2, imagenes2)
 
         self.assertEqual(len(cliente.get_pedidos_realizados()), 2)
 
@@ -59,7 +69,6 @@ class TestUsuarioAdministrador(unittest.TestCase):
         print("Cargo:", admin.get_cargo())
         print("Turno:", admin.get_turno())
 
-        #Se crea el cliente_test para el historial de pedidos por parte del admin
         cliente_test = UsuarioCliente(
             1,
             "Lucía",
@@ -70,11 +79,18 @@ class TestUsuarioAdministrador(unittest.TestCase):
             "123456789"
         )
 
-        #Luego creamos los pedidos
-        cliente_test.realizar_pedido(101, 3000, 1, 1, ["imagen1.png", "imagen2.png"])
-        cliente_test.realizar_pedido(102, 5000, 2, 2, ["imagen3.png", "imagen4.png"])
+        imagenes1 = [
+            Imagen(1, "imagen1.png", "Promocional", 2, 1),
+            Imagen(2, "imagen2.png", "Institucional", 3, 1)
+        ]
+        imagenes2 = [
+            Imagen(3, "imagen3.png", "Navideña", 4, 1),
+            Imagen(4, "imagen4.png", "Oferta", 5, 1)
+        ]
 
-        # Se muestra los pedidos desde el admin
+        cliente_test.realizar_pedido(101, 3000, 1, 1, imagenes1)
+        cliente_test.realizar_pedido(102, 5000, 2, 2, imagenes2)
+
         print("\n--- HISTORIAL DE PEDIDOS DEL CLIENTE DESDE ADMIN ---")
         admin.ver_pedidos_de_cliente(cliente_test)
 

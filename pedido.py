@@ -1,3 +1,4 @@
+
 from datetime import date
 from imagen import Imagen
 
@@ -30,6 +31,16 @@ class Pedido:
     def set_id_pago(self, nuevo_id_pago): self._id_pago = nuevo_id_pago
     def set_estado(self, nuevo_estado): self._estado = nuevo_estado
     def set_lista_imagenes(self, nueva_lista): self._lista_de_imagenes = nueva_lista
+
+    def get_resumen(self):
+        resumen = {
+            "ID Pedido": self._id_pedido,
+            "Fecha": self._fecha_pedido,
+            "Total": self._total,
+            "Estado": self._estado,
+            "Imágenes": len(self._lista_de_imagenes),
+        }
+        return resumen
 
     # Metodos adicionales
     def calcular_total(self, precio_unitario):
